@@ -1,12 +1,14 @@
 extern crate ncurses;
 
 mod utils;
+mod player;
 
 use std::cmp::{max, min};
 use std::path::Path;
 
 use ncurses::*;
 
+use player::Player;
 use utils::fs_utils::list_files;
 
 static COLOR_PAIR_DEFAULT: i16 = 1;
@@ -42,6 +44,9 @@ fn main() {
     show_files(&files, current_index);
 
     refresh();
+
+    let mut player = Player::new();
+    player.play("/Users/hualet/Desktop/test.mp3");
 
     let mut key = getch();
     while key != 'q' as i32 {
