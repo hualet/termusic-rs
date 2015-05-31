@@ -11,13 +11,15 @@ use utils::fs_utils::list_files;
 fn main() {
     initscr();
 
-    printw("Hello, world!");
+    let files = list_files(&Path::new("/Users/hualet/"));
+
+    for file in files {
+    	printw(&file[..]);
+    	printw("\n");
+    }
 
     refresh();
 
-    println!("{:?}", list_files(&Path::new("/Users/hualet/")));
-
     getch();
-
     endwin();
 }

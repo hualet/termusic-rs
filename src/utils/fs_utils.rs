@@ -1,4 +1,4 @@
-use std::fs::{self, DirEntry};
+use std::fs;
 use std::path::Path;
 
 pub fn list_files(path: &Path) -> Vec<String> {
