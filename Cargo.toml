@@ -1,0 +1,8 @@
+[package]
+name = "termusic-rs"
+version = "0.1.0"
+authors = ["hualet <mr.asianwang@gmail.com>"]
+
+[dependencies.ncurses]
+version = "*"
+default-features = false
