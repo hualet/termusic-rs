@@ -2,24 +2,59 @@ extern crate ncurses;
 
 mod utils;
 
+use std::cmp::{max, min};
 use std::path::Path;
 
 use ncurses::*;
 
 use utils::fs_utils::list_files;
 
+static COLOR_PAIR_DEFAULT: i16 = 1;
+static COLOR_PAIR_HIGHLIGHT: i16 = 2;
+
+fn show_files(files: &Vec<String>, current_index: i16) {
+	clear();
+	mv(0, 0);
+
+	for index in 0..files.len() {
+		let mut color_pair = COLOR_PAIR_DEFAULT;
+		if (index as i16 == current_index) {
+			color_pair = COLOR_PAIR_HIGHLIGHT;
+		}
+
+		attron(COLOR_PAIR(color_pair));
+		printw(&files[index][..]);
+		printw("\n");
+		attroff(COLOR_PAIR(color_pair));
+	}
+}
+
 fn main() {
+	let mut current_index = 0;
+
     initscr();
 
-    let files = list_files(&Path::new("/Users/hualet/"));
+    start_color();
+    init_pair(COLOR_PAIR_DEFAULT, constants::COLOR_GREEN, constants::COLOR_BLACK);
+    init_pair(COLOR_PAIR_HIGHLIGHT, constants::COLOR_RED, constants::COLOR_BLACK);
 
-    for file in files {
-    	printw(&file[..]);
-    	printw("\n");
-    }
+    let files = list_files(&Path::new("/Users/hualet/"));
+    show_files(&files, current_index);
 
     refresh();
 
-    getch();
+    let mut key = getch();
+    while key != 'q' as i32 {
+    	if key == 'j' as i32 {
+    		current_index = min(current_index + 1, (files.len() - 1) as i16);
+    	} else if (key == 'k' as i32) {
+    		current_index = max(current_index - 1, 0);
+    	}
+
+    	show_files(&files, current_index);
+
+    	key = getch();
+    }
+
     endwin();
 }
